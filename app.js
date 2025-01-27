@@ -63,7 +63,12 @@ const jsonData = {
         ]
     }
 };
-
+const quartiersAbreges = {
+    'Saint Jacques & Fontaine du Bac': 'SJ & FDB',
+    'Les Vergnes & La Gauthière': 'VE & GA',
+    'Croix de Neyrat & Champratel': 'CN & CAMP',
+    'Centre': 'CTRE'
+};
 // Données pour le graphique
 const quartierData = {
     labels: ["Saint Jacques & Fontaine du Bac", "Les Vergnes & La Gauthière", "Croix de Neyrat & Champratel", "Centre"],  
@@ -116,6 +121,22 @@ var pieChart = new Chart(ctx, {
             legend: {
                 position: 'top'
             },
+            datalabels: {
+                color: '#ffffff', // Couleur du texte
+                font: {
+                    size: 20,
+                    weight: 'bold'
+                },
+                
+                textStrokeColor: 'rgba(0, 0, 0, 0.36)', // Couleur de l'ombre (ici, blanc)
+                textStrokeWidth: 3, // Épaisseur de l'ombre
+                textShadowBlur: 5, // Intensité du flou (ombre portée)
+                textShadowColor: 'rgba(0, 0, 0, 0.06)', // Couleur de l'ombre (optionnel)
+                formatter: (value, context) => {
+                    const label = context.chart.data.labels[context.dataIndex];
+                    return quartiersAbreges[label] || label; // Affiche l'abréviation ou le nom complet si non trouvé
+                },
+            }
         },
         animation: {
             duration: 500,
@@ -135,7 +156,8 @@ var pieChart = new Chart(ctx, {
         tooltips: {
             enabled: false
         },
-    }
+    },
+    plugins: [ChartDataLabels] // Ajout du plugin Datalabels
 });
 
 // Fonction pour actualiser le tableau avec les projets du quartier sélectionné et afficher le total et les pourcentages
