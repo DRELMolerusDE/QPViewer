@@ -27,9 +27,9 @@ const jsonData = {
         ],
         "GA": [
             { "association": "OCCE MATERNELLE CHARLES PERRAULT", "projet": "Langue orale en maternelle", "montant": 6000 },
-            { "association": "GAUTHIERE CULTURE ET LOISIRS (LA) ECOLE CHARLES PERRAULT", "projet": "Pour une activité périscolaire éducative (danse, théâtre, musique et ludothèque)", "montant": 4000 },
-            { "association": "GAUTHIERE CULTURE ET LOISIRS (LA) ECOLE CHARLES PERRAULT", "projet": "Pour une culture scolaire à partager", "montant": 3000 },
-            { "association": "GAUTHIERE CULTURE ET LOISIRS (LA) ECOLE CHARLES PERRAULT", "projet": "Une réussite culturelle pour une réussite éducative", "montant": 3500 },
+            { "association": "GAUTHIERE CULTURE ET LOISIRS ECOLE CHARLES PERRAULT", "projet": "Pour une activité périscolaire éducative (danse, théâtre, musique et ludothèque)", "montant": 4000 },
+            { "association": "GAUTHIERE CULTURE ET LOISIRS ECOLE CHARLES PERRAULT", "projet": "Pour une culture scolaire à partager", "montant": 3000 },
+            { "association": "GAUTHIERE CULTURE ET LOISIRS ECOLE CHARLES PERRAULT", "projet": "Une réussite culturelle pour une réussite éducative", "montant": 3500 },
             { "association": "OCCE ECOLE ELEMENTAIRE CHARLES PERRAULT", "projet": "Développer les sciences et les arts à l’école", "montant": 3000 },
             { "association": "COLLEGE LA CHARME", "projet": "Vivre ensemble, il était une fois la différence", "montant": 3000 },
             { "association": "OCCE COOPERATIVE SCOLAIRE DE L’ECOLE MATERNELLE JEAN DE LA FONTAINE", "projet": "Nature et danse dans tous les sens", "montant": 6500 },
@@ -47,15 +47,16 @@ const jsonData = {
             { "association": "COLLEGE CHARLES BAUDELAIRE", "projet": "Classe de 6ème pratiques culturelles et artistiques", "montant": 2000 },
             { "association": "COLLEGE CHARLES BAUDELAIRE", "projet": "Séjour ENVOL 4ème & 5ème", "montant": 2500 },
             { "association": "ÉCOLE ÉLÉMENTAIRE JEAN MACÉ", "projet": "Mobilité Saint-Jacques, volet ker netra", "montant": 4000 },
-            { "association": "AS CLERMONT SAINT JACQUES FOOT", "projet": "Ballon de savoir", "montant": 4000 }
         ],
         "VE": [
             { "association": "OCCE JULES VERNES", "projet": "Tous en bonne santé", "montant": 3000 },
             { "association": "OCCE ELEMENTAIRE J VERNE", "projet": "Tous à la découverte du PDD", "montant": 3100 },
             { "association": "AMICALE LAIQUE J VERNE", "projet": "Mise en place d’activités Péri et extra-scolaires", "montant": 7000 },
             { "association": "LES CONQUERANTS ROMAIN RO’LAND", "projet": "Maracatu des Vergnes", "montant": 2800 },
-            { "association": "FAMILY SOCIAL CLUB", "projet": "Ecol’ture", "montant": 4000 },
-            { "association": "COLLEGE CHARLES BAUDELAIRE", "projet": "3ème Médias et bilangues", "montant": 1500 }
+            { "association": "COLLEGE CHARLES BAUDELAIRE", "projet": "3ème Médias et bilangues", "montant": 1500 },
+            { "association": "OCCE ELEMENTAIRE MERCOEUR", "projet": "Développer le vivre ensemble.", "montant": 2000 },
+            { "association": "ASSOCIATION DES ELEVES DES ELEVES DE L'ECOLE MATERNELLE ROMAIN ROLLAND", "projet": "Percussions en maternelles", "montant": 3000 },
+            { "association": "OCCE ELEMENTAIRE MERCOEUR", "projet": "Le developpement durable a l'école", "montant": 2000 }
         ],
         "CAMP": [
             { "association": "OCCE FOUSSON", "projet": "Apprendre autrement avec les outils de la co-éducation", "montant": 3000 }
@@ -158,27 +159,42 @@ function updateProjectsTable(zone) {
         'Les Vergnes & La Gauthière': ['VE', 'GA']
     };
 
+    // Calcul du montant total global
+    const totalGlobal = Object.values(jsonData.zones).flat().reduce((sum, project) => sum + project.montant, 0);
+
     const selectedZone = zonesMapping[zone];
     let totalAmount = 0;
     const projects = [];
 
+    const zonePercentages = []; // Pour stocker les pourcentages des zones individuelles
+
     // Récupérer les projets des zones sélectionnées
     selectedZone.forEach(zoneKey => {
-        jsonData.zones[zoneKey].forEach(project => {
-            projects.push(project);
-            totalAmount += project.montant;
-        });
+        if (jsonData.zones[zoneKey]) {
+            const zoneTotal = jsonData.zones[zoneKey].reduce((sum, project) => sum + project.montant, 0);
+            projects.push(...jsonData.zones[zoneKey].map(project => ({ ...project, zone: zoneKey })));
+            totalAmount += zoneTotal;
+
+            // Calculer le pourcentage de la zone par rapport au total global
+            const zonePercentage = ((zoneTotal / totalGlobal) * 100).toFixed(2);
+            zonePercentages.push(`${zoneKey}: ${zonePercentage}%`);
+        }
     });
 
-    // Affichage du total des financements
-    totalDisplay.innerHTML = `Total financement: ${totalAmount}€`;
+    // Affichage du total des financements du quartier et des pourcentages
+    const groupPercentage = ((totalAmount / totalGlobal) * 100).toFixed(2);
+    totalDisplay.innerHTML = `
+        Total financement: ${totalAmount}€ (${groupPercentage}% du total global)
+        <br>
+        Répartition: ${zonePercentages.join(', ')}
+    `;
 
-    // Remplir le tableau avec les projets
+    // Remplir le tableau avec les projets et la zone associée
     projects.forEach(project => {
         const row = document.createElement('tr');
         row.innerHTML = `
             <td>${project.association}</td>
-            <td>${project.projet}</td>
+            <td>${project.zone}: ${project.projet}</td>
             <td>${project.montant}€</td>
         `;
         tbody.appendChild(row);
