@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Carte des Quartiers</title>
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        .container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .chart-container {
+            position: relative;
+            width: 500px;
+            height: 500px;
+            margin-bottom: 20px;
+        }
+
+        .table-container {
+            width: 80%;
+            margin-top: 20px;
+        }
+
+        #totalDisplay {
+            font-size: 18px;
+            font-weight: bold;
+            margin-bottom: 20px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+
+        th, td {
+            padding: 10px;
+            text-align: left;
+            border: 1px solid #ddd;
+        }
+
+        th {
+            background-color: #f2f2f2;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Affichage du total et des pourcentages au-dessus du graphique -->
+        <div id="totalDisplay">
+            <!-- Le total et les pourcentages seront affichés ici -->
+        </div>
+
+        <!-- Conteneur pour le graphique -->
+        <div class="chart-container">
+            <canvas id="pieChart"></canvas>
+        </div>
+    
+        <!-- Conteneur pour le tableau -->
+        <div class="table-container">
+            <table id="projectsTable">
+                <thead>
+                    <tr>
+                        <th>Association</th>
+                        <th>Projet</th>
+                        <th>Montant (€)</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <!-- Les données du tableau seront ajoutées dynamiquement ici -->
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels"></script>
+    <script src="app.js"></script>
+</body>
+</html>
