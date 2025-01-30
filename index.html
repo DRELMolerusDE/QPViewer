@@ -18,11 +18,9 @@
             width: 500px;
             height: 500px;
             margin-bottom: 20px;
-        }
-
-        .table-container {
-            width: 80%;
-            margin-top: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
         }
 
         #totalDisplay {
@@ -31,10 +29,18 @@
             margin-bottom: 20px;
         }
 
+        .table-container {
+            width: 100%;
+            max-width: 800px;
+            overflow-x: auto;
+            margin-top: 20px;
+        }
+
         table {
             width: 100%;
             border-collapse: collapse;
             margin-top: 20px;
+            table-layout: auto;
         }
 
         th, td {
@@ -46,21 +52,38 @@
         th {
             background-color: #f2f2f2;
         }
+
+        select {
+            padding: 10px;
+            margin-top: 20px;
+            font-size: 16px;
+            border-radius: 5px;
+        }
+
+        .dropdown-container {
+            margin-top: 20px;
+        }
     </style>
 </head>
 <body>
     <div class="container">
-        <!-- Affichage du total et des pourcentages au-dessus du graphique -->
-        <div id="totalDisplay">
-            <!-- Le total et les pourcentages seront affichés ici -->
-        </div>
+        <div id="totalDisplay"></div>
 
-        <!-- Conteneur pour le graphique -->
+        <!-- Graphique en secteurs -->
         <div class="chart-container">
             <canvas id="pieChart"></canvas>
         </div>
-    
-        <!-- Conteneur pour le tableau -->
+
+        <!-- Dropdown pour sélectionner la zone -->
+        <div class="dropdown-container">
+            <select id="zoneSelect">
+                <option value="Nord">Quartier Nord</option>
+                <option value="Sud">Quartier Sud</option>
+                <option value="Centre">Centre</option>
+            </select>
+        </div>
+
+        <!-- Tableau des projets -->
         <div class="table-container">
             <table id="projectsTable">
                 <thead>
@@ -68,18 +91,20 @@
                         <th>Association</th>
                         <th>Projet</th>
                         <th>Montant (€)</th>
+                        <th>Pourcentage Ville (%)</th>
+                        <th>Pourcentage Zone (%)</th>
+                        <th>Pourcentage Quartier (%)</th>
+                        <th>Quartier</th>
                     </tr>
                 </thead>
-                <tbody>
-                    <!-- Les données du tableau seront ajoutées dynamiquement ici -->
-                </tbody>
+                <tbody id="tableBody"></tbody>
             </table>
         </div>
     </div>
 
-    <!-- Scripts -->
+    <!-- Inclusion des bibliothèques JavaScript -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2.0.0"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels"></script>
     <script src="app.js"></script>
 </body>
 </html>
